@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# Snarfed from Jordan Hollinger's enqueuer API tool
+#
+
+auth="enqueue:uY990j1m"
+job="$1"; shift
+host="http://localhost:3000"
+
+# Build HTTP params
+data=""
+while (( "$#" )); do
+  data="$data&arg[]=$1"
+  shift 1
+done
+
+# Try to enqueue the job over the API
+response_code=`curl "$host/jobs/enqueue/$job" --silent --write-out "%{http_code}" --output /dev/null -X POST --user "$auth" --data "$data"`
+
+# Warn if it failed
+if [[ "$response_code" != "200" ]]; then
+  echo "Job submission failed! The response code while trying to enqueue $job was $response_code."
+  exit 1
+fi
