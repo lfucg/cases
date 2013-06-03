@@ -1,6 +1,6 @@
 xml.instruct!
 xml.kml xmlns: 'http://www.opengis.net/kml/2.2' do
-  @events.each do |event|
+  @events.reject!{ |e| e.lat.nil? || e.lon.nil? }.each do |event|
     xml.Placemark do
       xml.name "#{event.date.strftime('%Y-%m-%d')} #{event.location}"
       xml.description event.description
