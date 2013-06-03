@@ -9,4 +9,12 @@ class Event < ActiveRecord::Base
   validates :location, presence: true
 
   scope :geocodeable, where(geocoded: false)
+
+  def lat
+    coords.try(:lat)
+  end
+
+  def lon
+    coords.try(:lon)
+  end
 end

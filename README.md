@@ -1,27 +1,42 @@
 geoevents
 =========
 
-Geoevents is an API for handling geocentric government service events like 311 calls, building inspection complaints and permits, code inspection and enforcement cases and more.
+Geoevents is an API for handling geospatial government service events like 311 calls, building inspection complaints and permits, code inspection and enforcement cases and more.
 
 ## Usage
 
-Data is available in XML, JSON and CSV formats.
+Event data is available in XML, JSON, KML and CSV formats.
 
 Query API:
 
-    /:bucket.json?date_range=01012013-05242013
-    /:bucket.json?date=01012013
-    /:bucket.json?coords=38.044624,-84.495629
+    /:bucket.json?date_range=20130101-20130524
+    /:bucket.json?date=20130101
+    /:bucket.json?date=20130101&limit=20
 
-Bulk download API:
-    /:bucket/all.json
+Pagination:
+
+    /:bucket/pages.json&per_page=10 # get number of pages (JSON and XML Only)
+    /:bucket.json?page=2&per_page=10
+
+Geospatial API:
+
+    /:bucket.json?coords=38.044624,-84.495629&within=10mi
+    /:bucket.json?coords=38.044624,-84.495629&within=5km
+
+Bulk download API (download everything):
+
+    /:bucket.json
     
-Available Buckets:
+Available Buckets (JSON and XML only):
 
-    /LEX # LexCall 311 calls
-    /BIC # Building inspection complaints
-    /BIP # Building inspection permits
-    /CEC # Code enforcement cases
-    /HPC # Historic preservation cases
-    /PTR # Planning cases
-    /ROW # Right of way permits
+    /buckets.json
+
+Current Buckets:
+
+    /lex # LexCall 311 calls
+    /bic # Building inspection complaints
+    /bip # Building inspection permits
+    /cec # Code enforcement cases
+    /hpc # Historic preservation cases
+    /ptr # Planning cases
+    /row # Right of way permits

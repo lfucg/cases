@@ -6,7 +6,7 @@ class Bucket < ActiveRecord::Base
   before_validation :set_slug
 
   def query(params)
-    q = Query.new(self, params)
+    q = BucketQuery.new(self, params)
     q.validate
     q.valid? ? q.run : []
   end
