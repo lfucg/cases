@@ -8,6 +8,7 @@ gem 'sidekiq'
 gem 'mapquest_batch', git: 'git://github.com/nuex/mapquest_batch.git'
 gem 'multi_json', '1.7.5'
 gem 'therubyracer'
+gem 'unicorn'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
