@@ -2,6 +2,10 @@
 #
 # Snarfed from Jordan Hollinger's enqueuer API tool
 #
+# Usage:
+#
+#   ./enqueue job [args]
+#
 script="${0%/*}"
 
 # Create an HTTP Basic Auth format user/pass string from
