@@ -2,8 +2,17 @@
 #
 # Snarfed from Jordan Hollinger's enqueuer API tool
 #
+script="${0%/*}"
 
-auth="enqueue:uY990j1m"
+# Create an HTTP Basic Auth format user/pass string from
+# the Jobs API YAML config file
+_enqueuer_extract_auth() {
+  config="$script/../config/jobs_api.yml"
+  [ -f "$config" ] || { echo "jobs_api.yml is missing"; exit 1; }
+  awk 'NR == 1 { u = $2 }; NR == 2 { p = $2 }; END { print u ":" p }' "$config"
+}
+
+auth="$(_enqueuer_extract_auth)"
 job="$1"; shift
 host="http://localhost:3000"
 
