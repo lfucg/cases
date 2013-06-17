@@ -6,7 +6,7 @@
 #
 #   ./enqueue job [args]
 #
-script="${0%/*}"
+
 
 # Create an HTTP Basic Auth format user/pass string from
 # the Jobs API YAML config file
@@ -16,9 +16,10 @@ _enqueuer_extract_auth() {
   awk 'NR == 1 { u = $2 }; NR == 2 { p = $2 }; END { print u ":" p }' "$config"
 }
 
+script="${0%/*}"
 auth="$(_enqueuer_extract_auth)"
 job="$1"; shift
-host="http://localhost:3000"
+[ "$QUEUE_HOST" ] || QUEUE_HOST="http://localhost:3000"
 
 # Build HTTP params
 data=""
@@ -28,7 +29,7 @@ while (( "$#" )); do
 done
 
 # Try to enqueue the job over the API
-response_code=`curl "$host/jobs/enqueue/$job" --silent --write-out "%{http_code}" --output /dev/null -X POST --user "$auth" --data "$data"`
+response_code=`curl "$QUEUE_HOST/jobs/enqueue/$job" --silent --write-out "%{http_code}" --output /dev/null -X POST --user "$auth" --data "$data"`
 
 # Warn if it failed
 if [[ "$response_code" != "200" ]]; then
