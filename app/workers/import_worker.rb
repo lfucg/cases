@@ -3,13 +3,11 @@ class ImportWorker
   include Sidekiq::Worker
 
   def perform
-    each_import do |slug, file|
-      if bucket = Bucket.find_by_slug(slug)
-        bucket.events.destroy_all
-        CSV.foreach(file) { |r| import_row(bucket, r) }
-        delete(file)
-        GeocodeWorker.perform_async(bucket.id)
-      end
+    each_import do |bucket, file|
+      bucket.events.destroy_all
+      CSV.foreach(file) { |r| import_row(bucket, r) }
+      delete(file)
+      GeocodeWorker.perform_async(bucket.id)
     end
   end
 
@@ -21,8 +19,18 @@ class ImportWorker
 
   def each_import
     Dir["#{import_directory}/*.csv"].each do |file|
-      yield(file_slug(file), file)
+      bucket = find_or_create_bucket(file_slug(file))
+      yield(bucket, file)
     end
+  end
+
+  def find_or_create_bucket(slug)
+    bucket = Bucket.where(slug: slug).first
+    return bucket if bucket
+    bucket = Bucket.new
+    bucket.name = slug.upcase
+    bucket.save
+    bucket
   end
 
   def file_slug(file)
