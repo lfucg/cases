@@ -9,7 +9,7 @@ pid "#{app_dir}/tmp/pids/unicorn_geoevents.pid"
 
 preload_app true
 timeout 30
-listen 3001, tcp_nopush: true
+listen 3003, tcp_nopush: true
 listen "#{app_dir}/tmp/sockets/unicorn.geoevents.sock"
 
 GC.respond_to?(:copy_on_write_friendly=) and
