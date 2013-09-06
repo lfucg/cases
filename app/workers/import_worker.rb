@@ -2,6 +2,9 @@ require 'csv'
 class ImportWorker
   include Sidekiq::Worker
 
+  CITY = 'Lexington'
+  STATE = 'KY'
+
   def perform
     each_import do |bucket, file|
       bucket.events.destroy_all
@@ -41,8 +44,12 @@ class ImportWorker
     event = bucket.events.new
     event.description = row[0]
     event.date = Date.strptime(row[1], '%Y-%m-%d')
-    event.location = row[2]
+    event.location = append_city_state(row[2])
     event.save
+  end
+
+  def append_city_state(location)
+    "#{location}, #{CITY}, #{STATE}"
   end
 
   def delete(file)
