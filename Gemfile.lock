@@ -49,6 +49,9 @@ GEM
     coffee-script-source (1.6.2)
     connection_pool (1.0.0)
     erubis (2.7.0)
+    exception_notification (4.0.1)
+      actionmailer (>= 3.0.4)
+      activesupport (>= 3.0.4)
     execjs (1.4.0)
       multi_json (~> 1.0)
     hike (1.2.2)
@@ -152,6 +155,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-postgis-adapter
   coffee-rails (~> 3.2.1)
+  exception_notification
   jquery-rails
   mapquest_batch!
   multi_json (= 1.7.5)

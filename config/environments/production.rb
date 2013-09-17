@@ -64,4 +64,28 @@ Geoevents::Application.configure do
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
+
+  # ACTIONMAILER
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_options = {from: 'lex-geoevents@iostruct.com'}
+  config.action_mailer.smtp_settings = {
+    address: 'smtp.gmail.com',
+    port: 587,
+    domain: 'iostruct.com',
+    user_name: 'lex-geoevents',
+    password: 'Vei0xien',
+    authentication: 'plain',
+    enable_starttls_auto: true
+  }
+
+  # EXCEPTION NOTIFIER
+  config.middleware.use ExceptionNotification::Rack, email: {
+    email_prefix: '[LEX-GEOEVENTS] ',
+    sender_address: '"LEX-GEOEVENTS" <lex-geoevents@iostruct.com>',
+    exception_recipients: %w{lex-geoevents-exceptions@iostruct.com}
+  }
+
+
 end
