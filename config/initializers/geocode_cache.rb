@@ -1,3 +1,10 @@
-require 'yaml'
-geocode_cache_config = YAML::load_file(File.expand_path(File.join(File.dirname(__FILE__), '..', 'geocode_cache.yml')))
-Rails.application.config.geocode_cache_db = geocode_cache_config[:db]
+require File.join(Rails.root, 'lib', 'yaml_config')
+
+module GeocodeCacheInitializer
+  def self.configure
+    config = YamlConfig.load('geocode_cache')
+    Rails.application.config.geocode_cache_db = config[:db]
+  end
+end
+
+GeocodeCacheInitializer.configure

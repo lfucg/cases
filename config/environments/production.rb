@@ -1,3 +1,5 @@
+require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'yaml_config')
+require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'mail_config')
 Geoevents::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
@@ -70,15 +72,7 @@ Geoevents::Application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default = {from: 'lex-geoevents@iostruct.com'}
-  config.action_mailer.smtp_settings = {
-    address: 'smtp.gmail.com',
-    port: 587,
-    domain: 'iostruct.com',
-    user_name: 'lex-geoevents',
-    password: 'Vei0xien',
-    authentication: 'plain',
-    enable_starttls_auto: true
-  }
+  MailConfig.apply_smtp_settings
 
   # EXCEPTION NOTIFIER
   config.middleware.use ExceptionNotification::Rack, email: {
