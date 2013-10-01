@@ -1,5 +1,3 @@
-require 'sidekiq/web'
-
 Geoevents::Application.routes.draw do
   mount Sidekiq::Web, at: '/sidekiq'
 
