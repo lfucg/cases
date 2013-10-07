@@ -17,4 +17,8 @@ class Event < ActiveRecord::Base
   def lon
     coords.try(:lon)
   end
+
+  def date
+    datetime.to_date
+  end
 end

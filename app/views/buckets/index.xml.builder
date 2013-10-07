@@ -2,7 +2,7 @@ xml.instruct!
 xml.events do
   @events.each do |event|
     xml.event do
-      xml.date event.date.strftime('%Y-%m-%d')
+      xml.date event.datetime.strftime('%Y-%m-%d')
       xml.location event.location
       xml.description event.description
       xml.lat event.lat

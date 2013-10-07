@@ -96,7 +96,7 @@ class BucketQuery
     build_date_conditions if @date
     build_date_range_conditions if @date_range
     build_coords_conditions if @coords
-    scope = @bucket.events.select('date, description, location, coords').scoped
+    scope = @bucket.events.select('datetime, description, location, coords').scoped
     @conditions = @conditions.join(' AND ')
     scope = scope.where(@conditions, *@args).scoped
 
@@ -114,12 +114,12 @@ class BucketQuery
   end
 
   def build_date_conditions
-    @conditions << "date = ?"
+    @conditions << "datetime = ?"
     @args << parse_date(@date)
   end
 
   def build_date_range_conditions
-    @conditions << "date BETWEEN ? AND ?"
+    @conditions << "datetime BETWEEN ? AND ?"
     @date_range.split(/-/).each { |d| @args << parse_date(d) }
   end
 
@@ -153,6 +153,6 @@ class BucketQuery
   end
 
   def parse_date(date)
-    Date.strptime(@date, '%Y%m%d')
+    Date.strptime(@date, '%Y%m%d').to_time
   end
 end

@@ -60,8 +60,8 @@ class BucketsController < ApplicationController
   end
 
   def transform_attributes(event)
-    latlon = { lat: event.lat, lon: event.lon }
-    event.attributes.slice('date', 'location', 'description').merge(latlon)
+    extra = { lat: event.lat, lon: event.lon, date: event.date }
+    event.attributes.slice('location', 'description').merge(extra)
   end
 
   def events_csv
