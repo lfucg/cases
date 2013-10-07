@@ -9,7 +9,6 @@ class ImportWorker
     each_import do |bucket, file|
       bucket.events.destroy_all
       CSV.foreach(file) { |r| import_row(bucket, r) }
-      delete(file)
       GeocodeWorker.perform_async(bucket.id)
     end
   end
@@ -52,7 +51,4 @@ class ImportWorker
     "#{location}, #{CITY}, #{STATE}"
   end
 
-  def delete(file)
-    File.delete(file)
-  end
 end
