@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131007193528) do
+ActiveRecord::Schema.define(:version => 20131010150502) do
 
   create_table "buckets", :force => true do |t|
     t.string "name", :null => false
@@ -19,14 +19,13 @@ ActiveRecord::Schema.define(:version => 20131007193528) do
   end
 
   create_table "events", :force => true do |t|
-    t.integer  "bucket_id",                                                                                  :null => false
-    t.datetime "datetime",                                                                                   :null => false
+    t.integer  "bucket_id",                                                                                   :null => false
+    t.datetime "datetime",                                                                                    :null => false
     t.string   "location"
-    t.string   "description"
-    t.boolean  "geocoded",                                                                :default => false
-    t.spatial  "coords",      :limit => {:srid=>4326, :type=>"point", :geographic=>true}
-    t.datetime "created_at",                                                                                 :null => false
-    t.datetime "updated_at",                                                                                 :null => false
+    t.text     "description"
+    t.boolean  "geocoded",                                                                 :default => false
+    t.spatial  "coords",       :limit => {:srid=>4326, :type=>"point", :geographic=>true}
+    t.string   "row_checksum"
   end
 
   add_index "events", ["coords"], :name => "index_events_on_coords", :spatial => true

@@ -1,28 +1,20 @@
-require 'csv'
 class ImportWorker
   include Sidekiq::Worker
 
-  CITY = 'Lexington'
-  STATE = 'KY'
-
   def perform
-    each_import do |bucket, file|
-      bucket.events.destroy_all
-      CSV.foreach(file) { |r| import_row(bucket, r) }
-      GeocodeWorker.perform_async(bucket.id)
-    end
+    each_import { |id, file| ImportFileWorker.perform_async(id, file) }
   end
 
   private
 
   def import_directory
-    @import_directory ||= "#{Rails.root}/import"
+    "/tmp/geoevents"
   end
 
   def each_import
     Dir["#{import_directory}/*.csv"].each do |file|
       bucket = find_or_create_bucket(file_slug(file))
-      yield(bucket, file)
+      yield(bucket.id, file)
     end
   end
 
@@ -38,17 +30,4 @@ class ImportWorker
   def file_slug(file)
     File.basename(file, ".csv").downcase
   end
-
-  def import_row(bucket, row)
-    event = bucket.events.new
-    event.description = row[0]
-    event.date = Date.strptime(row[1], '%Y-%m-%d')
-    event.location = append_city_state(row[2])
-    event.save
-  end
-
-  def append_city_state(location)
-    "#{location}, #{CITY}, #{STATE}"
-  end
-
 end

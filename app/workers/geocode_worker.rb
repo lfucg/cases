@@ -3,13 +3,13 @@ class GeocodeWorker
 
   def perform(bucket_id)
     bucket = Bucket.find(bucket_id)
-    events = bucket.events.geocodeable.select('location')
-    events.each_slice(100).to_a.each { |batch| run_batch(bucket, batch) }
+    locations = bucket.events.geocodeable.select('location').collect(&:location)
+    locations.each_slice(100) { |batch| run_batch(bucket_id, batch) }
   end
 
   private
   
-  def run_batch(bucket, batch)
-    GeocodeBatchWorker.perform_async(bucket.id, batch.collect(&:location))
+  def run_batch(bucket_id, batch)
+    GeocodeBatchWorker.perform_async(bucket_id, batch)
   end
 end
