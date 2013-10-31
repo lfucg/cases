@@ -1,1 +1,52 @@
-Welcome to the LFUCG Geographical Event Data API!
+<h1>Welcome!</h1>
+
+<p>This is the website for getting LFUCG case data.</p>
+
+<p>You can get data by either downloading the data in bulk using the <a href="#bulk_download">Bulk Download API</a> or by using the <a href="#http_api">HTTP API</a> for making real-time requests in your application.</p>
+
+<h2 id="bulk_download">Bulk download API (download everything):</h2>
+
+    /:bucket.:format.tar.gz
+
+<p>Available formats are <em>
+    
+<h2 id="http_api">HTTP API</h2>
+
+<p>Event data is available in XML, JSON, KML and CSV formats.</p>
+
+<h3>Query API:</h3>
+
+<pre>
+    /:bucket.json?date_range=20130101-20130524
+    /:bucket.json?date=20130101
+    /:bucket.json?date=20130101&limit=20
+</pre>
+
+<h3>Pagination:</h3>
+
+<pre>
+    /:bucket/pages.json&per_page=10 # get number of pages (JSON and XML Only)
+    /:bucket.json?page=2&per_page=10
+</pre>
+
+<h3>Geospatial API:</h3>
+
+<pre>
+    /:bucket.json?coords=38.044624,-84.495629&within=10mi
+    /:bucket.json?coords=38.044624,-84.495629&within=5km
+</pre>
+
+Available Buckets (JSON and XML only):
+
+    /buckets.json
+
+Current Buckets:
+
+    /lex # LexCall 311 calls
+    /bic # Building inspection complaints
+    /bip # Building inspection permits
+    /cec # Code enforcement cases
+    /hpc # Historic preservation cases
+    /ptr # Planning cases
+    /row # Right of way permits
+
