@@ -2,7 +2,7 @@ class ImportWorker
   include Sidekiq::Worker
 
   def perform
-    each_import { |id, file| ImportFileWorker.perform_async(id, file) }
+    each_import { |bucket, file| run_worker(bucket, file) }
   end
 
   private
@@ -14,7 +14,7 @@ class ImportWorker
   def each_import
     Dir["#{import_directory}/*.csv"].each do |file|
       bucket = find_or_create_bucket(file_slug(file))
-      yield(bucket.id, file)
+      yield(bucket, file)
     end
   end
 
@@ -29,5 +29,14 @@ class ImportWorker
 
   def file_slug(file)
     File.basename(file, ".csv").downcase
+  end
+
+  def run_worker(bucket, file)
+    worker = (seedable?(bucket) ? SeedWorker : ManifestWorker)
+    worker.perform_async(bucket.id, file)
+  end
+
+  def seedable?(bucket)
+    Event.where(bucket_id: bucket.id).count == 0
   end
 end
