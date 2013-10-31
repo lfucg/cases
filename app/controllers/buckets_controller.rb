@@ -23,7 +23,7 @@ class BucketsController < ApplicationController
   def render_index
     @events = @bucket.query(params)
     respond_to do |format|
-      format.json { events_json }
+      format.json { render json: events_json }
       format.xml
       format.csv { events_csv }
       format.kml
