@@ -1,14 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Geoevents</title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <title>Lexington Case Data Open API</title>
+  <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= javascript_include_tag "http://yandex.st/highlightjs/7.4/highlight.min.js" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
-<%= yield %>
+  <header id="top">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span6">
+          <p class="top">LEXKY.GOV OPEN DATA</p>
+          <p class="bottom">CASES</p>
+        </div>
+        <div class="span6">
+          <nav>
+            <ul class="nav nav-pills">
+              <li class="<%= @home_active %>"><a href="/">Home</a></li>
+              <li class="<%= @download_active %>"><a href="/download">Bulk Downloads</a></li>
+              <li class="<%= @reference_active %>"><a href="/api_reference">API Reference</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <div id="main" class="container-fluid">
+    <%= yield %>
+  </div>
 
 </body>
 </html>

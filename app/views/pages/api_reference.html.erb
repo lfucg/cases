@@ -1,0 +1,275 @@
+<div class="row-fluid">
+  <div class="span3">
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#top">Introduction</a></li>
+      <li><a href="#bulk">Bulk Downloads</a></li>
+      <li><a href="#listing">Listing Buckets</a></li>
+      <li><a href="#retrieving">Retrieving Cases</a></li>
+      <li><a href="#pagination">Pagination</a></li>
+    </ul>
+  </div>
+
+  <div class="span8">
+
+    <h1 id="intro">API Reference</h1>
+
+    <p>The Cases API allows you to access the latest data from reported LFUCG cases either via a flat file download or an HTTP REST resource to be used in your own application.</p>
+
+    <p>Each case is a reported event that has occurred at a given time and in a geographical area. A typical case could look something like this:</p>
+
+    <pre class="plain">
+      DATE: 2013-09-12
+      ADDRESS: "301 ESECOND ST, Lexington, KY"
+      DESCRIPTION: Missing Herbie Carts
+    </pre>
+
+    <p>Case data is categorized into the following buckets:</p>
+
+    <ul class="bucket-list">
+      <li><code>/lex</code> LexCall 311 calls</li>
+      <li><code>/bic</code> Building inspection complaints</li>
+      <li><code>/bip</code> Building inspection permits</li>
+      <li><code>/cec</code> Code enforcement cases</li>
+      <li><code>/hpc</code> Historic preservation cases</li>
+      <li><code>/ptr</code> Planning cases</li>
+      <li><code>/row</code> Right of way permits</li>
+    </ul>
+
+    <p>API examples are given using <code>curl</code> command line application as the HTTP client.</p>
+
+    <h2 id="bulk">Bulk CSV Download</h2>
+
+    <p>Data from each bucket is exported to CSV nightly.</p>
+    
+    <p>Example bulk download request:</p>
+
+    <pre>
+      <code class="bash">
+        $ curl http://<%= @api_endpoint %>/bulk/{BUCKET}.csv -o {BUCKET}.csv
+      </code>
+    </pre>
+
+    <p>See <%= link_to 'Downloads', '/download' %> for links to available bulk bucket data.</p>
+
+    <h2 id="listing">Listing Buckets</h2>
+
+    <p>This resource will return a list of buckets.</p>
+
+    <h3>Resource URL</h3>
+
+    <pre>
+      GET http://<%= @api_endpoint %>/buckets.{FORMAT}
+    </pre>
+
+    <h3>Parameters</h3>
+
+    <table class="param-table table">
+      <tbody>
+        <tr>
+          <td class="param">format</td>
+          <td class="doc">
+            <p><strong>required</strong></p>
+            <p>Available formats are: <code>json</code> and <code>xml</code>.</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Example Request</h3>
+
+    <pre>
+      <code class="bash">
+        $ curl http://<%= @api_endpoint %>/buckets.json
+      </code>
+    </pre>
+
+    <h3>Example Response</h3>
+
+    <pre>
+      <code class="json">
+        [
+          {"name":"LEX","slug":"lex"},
+          {"name":"BIC","slug":"bic"},
+          {"name":"HPC","slug":"hpc"},
+          {"name":"ROW","slug":"row"},
+          {"name":"BIP","slug":"bip"},
+          {"name":"CEC","slug":"cec"},
+          {"name":"PTR","slug":"ptr"}
+        ]
+      </code>
+    </pre>
+
+
+    <h2 id="retrieving">Retrieving Cases</h2>
+
+    <p>Case data is available in XML, JSON, KML and CSV formats by changing the extension of the bucket to the desired type.</p>
+
+    <h3>Resource URL</h3>
+
+    <pre>
+      GET http://<%= @api_endpoint %>/{BUCKET}.{FORMAT}
+    </pre>
+
+    <h3>Parameters</h3>
+
+    <table class="param-table table">
+      <tbody>
+        <tr>
+          <td class="param">bucket:</td>
+          <td class="doc">
+            <p><strong>required</strong></p>
+            <p>Available bucket values are:
+              <%= @buckets.collect{ |b| "<code>#{b.slug}</code>" }.join(', ').html_safe %></p>
+          </td>
+        </tr>
+        <tr>
+          <td class="param">format:</td>
+          <td class="doc">
+            <p><strong>required</strong></p>
+            <p>Available formats are: <code>json</code>, <code>xml</code>, <code>csv</code>, and <code>kml</code>.</p>
+          </td>
+        </tr>
+        <tr>
+          <td class="param">date_range:</td>
+          <td class="doc">
+            <p><strong>optional</strong></p>
+            <p>The value of a date range must have the following format: <em>YYYYMMDD-YYYYMMDD</em>. <em>Cannot be used with the <strong>date</strong> parameter.</em></p>
+          </td>
+        </tr>
+        <tr>
+          <td class="param">date:</td>
+          <td class="doc">
+            <p><strong>optional</strong></p>
+            <p>The value of date must have the following format: <em>YYYYMMDD</em>. <em>Cannot be used with the <strong>date_range</strong> parameter.</em></p>
+          </td>
+        </tr>
+        <tr>
+          <td class="param">limit:</td>
+          <td class="doc">
+            <p><strong>optional</strong></p>
+            <p>Limits the amount of records returned. Must be an integer.</p>
+          </td>
+        </tr>
+        <tr>
+          <td class="param">page:</td>
+          <td class="doc">
+            <p><strong>optional</strong></p>
+            <p>Sets the desired page. See <%= link_to 'Pagination', '#pagination' %> for more details.</p>
+          </td>
+        <tr>
+          <td class="param">per_page:</td>
+          <td class="doc">
+            <p><strong>optional</strong></p>
+            <p>Sets the amount of items to return per page when the page parameter is used. Defaults to 20 items if the <strong>page</strong> parameter is present. See <%= link_to 'Pagination', '#pagination' %> for more details.</p>
+          </td>
+        </tr>
+        <tr>
+          <td class="param">coords:</td>
+          <td class="doc">
+            <p><strong>optional</strong></p>
+            <p>Retrieves results near the given coordinates. Coordinates example: <em>38.044624,-84.495629</em>. <em>Requires the <strong>within</strong> parameter.</em></p>
+          </td>
+        </tr>
+        <tr>
+          <td class="param">within:</td>
+          <td class="doc">
+            <p><strong>optional</strong></p>
+            <p>Retrieves results within the given miles or kilometers. Example: <em>23km</em> or <em>10mi</em>. <em>Requires the <strong>coords</strong> parameter.</em></p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Example request</h3>
+
+    <pre>
+      <code class="bash">
+        $ curl -G http://<%= @api_endpoint %>/lex.json \
+          -d date_range=20130901-20130930 \
+          -d limit=2 \
+          -d coords=38.044624,-84.495629 \
+          -d within=10mi
+      </code>
+    </pre>
+
+    <h3>Example response</h3>
+
+    <pre>
+      <code class="json">
+        [
+           {
+              "location":"505 COLUMBIA AVE, Lexington, KY",
+              "description":"Bulky Items Wrong Day",
+              "lat":38.032273,
+              "lon":-84.498728,
+              "date":"2013-07-24"
+           },
+           {
+              "location":"625 COLUMBIA AVE, Lexington, KY",
+              "description":"Herbie - wrong collection day",
+              "lat":38.030258,
+              "lon":-84.496446,
+              "date":"2013-08-07"
+           }
+        ]
+      </code>
+    </pre>
+
+    <h2 id="pagination">Pagination</h2>
+
+    <p>Results can be paginated by first retrieving the count of pages on a bucket, then passing <strong>page</strong> and <strong>per_page</strong> parameter to subsequent case requests.</p>
+
+    <h3>Resource URL</h3>
+
+    <pre>
+      GET http://<%= @api_endpoint %>/{BUCKET}/pages.{FORMAT}
+    </pre>
+
+    <h3>Parameters</h3>
+
+    <table class="param-table table">
+      <tbody>
+        <tr>
+          <td class="param">bucket:</td>
+          <td class="doc">
+            <p><strong>required</strong></p>
+            <p>Available bucket values are:
+              <%= @buckets.collect{ |b| "<code>#{b.slug}</code>" }.join(', ').html_safe %></p>
+          </td>
+        </tr>
+        <tr>
+          <td class="param">format:</td>
+          <td class="doc">
+            <p><strong>required</strong></p>
+            <p>Available formats are: <code>json</code> and <code>xml</code>.</p>
+          </td>
+        </tr>
+        <tr>
+          <td class="param">per_page:</td>
+          <td class="doc">
+            <p><strong>optional</strong></p>
+            <p>When used, the amount of pages returned will be adjusted for the amount of items needed per page. The default items per page is 20.</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Example request</h3>
+
+    <pre>
+      <code class="bash">
+        $ curl -G http://<%= @api_endpoint %>/lex/pages.json \
+          -d per_page=10
+      </code>
+    </pre>
+
+    <h3>Example response</h3>
+
+    <pre>
+      <code class="json">
+        { "pages" : 15322 }
+      </code>
+    </pre>
+
+  </div>
+</div>

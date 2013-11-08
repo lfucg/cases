@@ -3,6 +3,10 @@ Geoevents::Application.routes.draw do
 
   root to: 'pages#root'
 
+  %w(download api_reference).each do |p|
+    get "/#{p}", to: "pages##{p}"
+  end
+
   get 'buckets', to: 'buckets#list'
   get ':slug', to: 'buckets#index'
   get ':slug/pages', to: 'buckets#pages'
