@@ -14,7 +14,7 @@
       </thead>
       <tbody>
         <% @buckets.each do |b| %>
-          <% next if b.events.count == 0 %>
+          <% next if b.events.count == 0 || b.bulk_csv_created_at.nil? %>
           <tr>
             <td><%= link_to "#{b.name}.csv", "/bulk/#{b.name}.csv" %></td>
             <td><%= b.bulk_csv_created_at %></td>
