@@ -11,11 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131010150502) do
+ActiveRecord::Schema.define(:version => 20131108040832) do
 
   create_table "buckets", :force => true do |t|
-    t.string "name", :null => false
-    t.string "slug", :null => false
+    t.string   "name",                :null => false
+    t.string   "slug",                :null => false
+    t.datetime "bulk_csv_created_at"
+    t.integer  "bulk_csv_filesize"
   end
 
   create_table "events", :force => true do |t|
