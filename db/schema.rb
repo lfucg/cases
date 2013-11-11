@@ -11,25 +11,28 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131108040832) do
+ActiveRecord::Schema.define(:version => 20131111144607) do
 
   create_table "buckets", :force => true do |t|
-    t.string   "name",                :null => false
-    t.string   "slug",                :null => false
+    t.string   "name",                               :null => false
+    t.string   "slug",                               :null => false
     t.datetime "bulk_csv_created_at"
     t.integer  "bulk_csv_filesize"
+    t.integer  "import_series",       :default => 0
   end
 
   create_table "events", :force => true do |t|
-    t.integer  "bucket_id",                                                                                   :null => false
-    t.datetime "datetime",                                                                                    :null => false
+    t.integer  "bucket_id",                                                                                    :null => false
+    t.datetime "datetime",                                                                                     :null => false
     t.string   "location"
     t.text     "description"
-    t.boolean  "geocoded",                                                                 :default => false
-    t.spatial  "coords",       :limit => {:srid=>4326, :type=>"point", :geographic=>true}
+    t.boolean  "geocoded",                                                                  :default => false
+    t.spatial  "coords",        :limit => {:srid=>4326, :type=>"point", :geographic=>true}
     t.string   "row_checksum"
+    t.integer  "import_series",                                                             :default => 0
   end
 
   add_index "events", ["coords"], :name => "index_events_on_coords", :spatial => true
+  add_index "events", ["row_checksum"], :name => "index_events_on_row_checksum"
 
 end
