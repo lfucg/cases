@@ -82,7 +82,7 @@ class ManifestWorker
     Event.delete_all(["bucket_id = ? AND import_series < ?", bucket_id, import_series])
     
     # Geocode addresses
-    #geocode(bucket_id)
+    geocode(bucket_id)
   end
 
   private

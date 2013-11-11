@@ -2,57 +2,66 @@ require 'mapquest_batch'
 class GeocodeBatchWorker
   include Sidekiq::Worker
 
-  def perform(bucket_id, batch)
-    bucket = Bucket.find(bucket_id)
-    batch.reject! { |location| geocode_from_cache(bucket, location) }
-    geocode(bucket, batch)
+  def perform(batch)
+    geocodeable = []
+
+    ids = batch.collect{ |b| b[0] }
+    @events = Event.where(id: ids)
+    batch.each do |id, loc|
+      event = @events.detect{ |x| x.id == id }
+      place = Place.where(address: loc).first
+      if place && place.geocode_complete?
+        event.sync_with_place(place)
+      elsif !place || (place && place.geocodeable?)
+        geocodeable << [id, loc]
+      end
+    end
+
+    geocode(geocodeable)
   end
 
   private
 
-  def geocode_from_cache(bucket, location)
-    return unless cached?(location)
-    update_event(bucket, location, GeocodeCache[location])
+  def geocode(batch)
+    locations = batch.collect{ |id, loc| loc }
+    results = MapquestBatch.geocode(locations.uniq)
+    update_events(batch, results)
   end
 
-  def geocode(bucket, batch)
-    results = MapquestBatch.geocode(batch)
-    update_events(bucket, results)
-  end
-
-  def update_events(bucket, results)
+  def update_events(batch, results)
     locations = results['results'].collect{ |res| location_data(res) }
-    locations.compact.each { |loc| cache_and_update_event(bucket, loc[:location], loc[:coords]) }
-  end
-
-  def cache_and_update_event(bucket, location, coords)
-    cache(location, coords)
-    update_event(bucket, location, coords)
+    locations.each do |loc|
+      address = loc[:location]
+      coords = loc[:coords]
+      applicable_batch = batch.detect{|b| b[1].match(address)}
+      id = applicable_batch[0]
+      e = @events.detect{|x| x.id == id} if id
+      if e
+        p = Place.where(address: address).first
+        if !p
+          p = Place.new
+          p.address = address
+          if coords
+            lat, lng = coords
+            p.coords = "POINT(#{lng} #{lat})"
+            p.geocode_status = 'complete'
+          else
+            p.geocode_status = 'failed'
+          end
+          p.save
+        end
+        e.sync_with_place(p)
+      end
+    end
   end
 
   def location_data(result)
-    location = result['providedLocation']['location']
+    data = {}
+    data[:location] = result['providedLocation']['location']
     coords_data = result['locations'].first
-    return unless coords_data
+    return data unless coords_data
     coords = coords_data['latLng']
-    { location: location, coords: [coords['lat'], coords['lng']] }
-  end
-
-  def update_event(bucket, location, coords)
-    events = bucket.events.where(location: location)
-    events.each do |e|
-      e.coords = "POINT(#{coords[1]} #{coords[0]})"
-      e.geocoded = true
-      e.save
-    end
-    true
-  end
-
-  def cached?(location)
-    GeocodeCache[location]
-  end
-
-  def cache(location, coords)
-    GeocodeCache[location] = coords
+    data[:coords] = [coords['lat'], coords['lng']]
+    data
   end
 end
