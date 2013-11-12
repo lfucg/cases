@@ -33,8 +33,8 @@ class GeocodeBatchWorker
     locations.each do |loc|
       address = loc[:location]
       coords = loc[:coords]
-      applicable_batch = batch.detect{|b| b[1].match(address)}
-      id = applicable_batch[0]
+      applicable_batch = batch.detect{|b| b[1] == address}
+      id = applicable_batch[0] if applicable_batch
       e = @events.detect{|x| x.id == id} if id
       if e
         p = Place.where(address: address).first
