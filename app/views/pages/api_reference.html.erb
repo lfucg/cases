@@ -185,7 +185,7 @@
     <pre>
       <code class="bash">
         $ curl -G http://<%= @api_endpoint %>/lex.json \
-          -d date_range=20130901-20130930 \
+          -d date_range=20130801-20130830 \
           -d limit=2 \
           -d coords=38.044624,-84.495629 \
           -d within=10mi
@@ -197,20 +197,20 @@
     <pre>
       <code class="json">
         [
-           {
-              "location":"505 COLUMBIA AVE, Lexington, KY",
-              "description":"Bulky Items Wrong Day",
-              "lat":38.032273,
-              "lon":-84.498728,
-              "date":"2013-07-24"
-           },
-           {
-              "location":"625 COLUMBIA AVE, Lexington, KY",
-              "description":"Herbie - wrong collection day",
-              "lat":38.030258,
-              "lon":-84.496446,
-              "date":"2013-08-07"
-           }
+          {
+            "location":"219 FOREST PARK RD, Lexington, KY",
+            "description":"Repair asphalt",
+            "lat":38.027782,
+            "lon":-84.514295,
+            "date":"2013-08-07"
+          },
+          {
+            "location":"228 FOREST PARK RD, Lexington, KY",
+            "description":"Illegal Material",
+            "lat":38.027678,
+            "lon":-84.514601,
+            "date":"2013-08-23"
+          }
         ]
       </code>
     </pre>
