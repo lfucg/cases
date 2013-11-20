@@ -23,9 +23,9 @@ class DumpWorker
   def dump_csv(bucket)
     file = "#{DUMP_DIR}/#{bucket.name}.csv"
     CSV.open(file, 'w+') do |csv|
-      csv << ['Date', 'Location', 'Description', 'Latitude', 'Longitude']
+      csv << ['Date', 'Address', 'Description', 'Latitude', 'Longitude']
       bucket.events.find_each(batch_size: 5000) do |e|
-        csv << [e.date.strftime('%Y-%m-%d'), e.location, e.description, e.lat, e.lon]
+        csv << [e.date.strftime('%Y-%m-%d'), e.address, e.description, e.lat, e.lon]
       end
     end
     bucket.bulk_csv_created_at = Time.now

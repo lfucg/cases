@@ -96,7 +96,7 @@ class BucketQuery
     build_date_conditions if @date
     build_date_range_conditions if @date_range
     build_coords_conditions if @coords
-    scope = @bucket.events.select('datetime, description, location, coords').scoped
+    scope = @bucket.events.select('datetime, description, address, coords').scoped
     @conditions = @conditions.join(' AND ')
     scope = scope.where(@conditions, *@args).scoped
 

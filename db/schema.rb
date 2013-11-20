@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131111184146) do
+ActiveRecord::Schema.define(:version => 20131120061524) do
 
   create_table "buckets", :force => true do |t|
     t.string   "name",                               :null => false
@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(:version => 20131111184146) do
   create_table "events", :force => true do |t|
     t.integer  "bucket_id",                                                                                     :null => false
     t.datetime "datetime",                                                                                      :null => false
-    t.string   "location"
+    t.string   "address"
     t.text     "description"
     t.spatial  "coords",         :limit => {:srid=>4326, :type=>"point", :geographic=>true}
     t.string   "row_checksum"

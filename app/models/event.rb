@@ -7,7 +7,7 @@ class Event < ActiveRecord::Base
 
   validates :datetime, presence: true
   validates :description, presence: true
-  validates :location, presence: true
+  validates :address, presence: true
 
   scope :geocodeable, where(geocode_status: 'new')
 

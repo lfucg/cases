@@ -3,8 +3,8 @@ class GeocodeWorker
 
   def perform(bucket_id)
     bucket = Bucket.find(bucket_id)
-    bucket.events.geocodeable.select('id, location').find_in_batches(batch_size: 100) do |batch|
-      converted_batch = batch.collect{ |e| [e.id, e.location] }
+    bucket.events.geocodeable.select('id, address').find_in_batches(batch_size: 100) do |batch|
+      converted_batch = batch.collect{ |e| [e.id, e.address] }
       run_batch(converted_batch)
     end
   end

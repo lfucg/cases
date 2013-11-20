@@ -15,7 +15,7 @@ class MassImport
 
   def build_sql
     sql = "DELETE FROM events WHERE bucket_id = #{bucket_id};"
-    sql << "COPY events (bucket_id, row_checksum, description, datetime, location) from '#{file}' WITH (DELIMITER(','), QUOTE('\"'), FORMAT('csv'));"
+    sql << "COPY events (bucket_id, row_checksum, description, datetime, address) from '#{file}' WITH (DELIMITER(','), QUOTE('\"'), FORMAT('csv'));"
     sql
   end
 

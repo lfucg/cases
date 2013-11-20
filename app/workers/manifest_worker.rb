@@ -40,7 +40,7 @@ class ManifestWorker
       end
 
       unless row_batch.empty?
-        sql = 'INSERT INTO events (bucket_id, import_series, row_checksum, location, datetime, description) VALUES '
+        sql = 'INSERT INTO events (bucket_id, import_series, row_checksum, address, datetime, description) VALUES '
         row_batch.each_with_index do |r, idx|
           values = [bucket_id, import_series, r[1], r[4], r[3], r[2]]
           quoted = values.collect{ |v| quote(v) }

@@ -61,14 +61,14 @@ class BucketsController < ApplicationController
 
   def transform_attributes(event)
     extra = { lat: event.lat, lon: event.lon, date: event.date }
-    event.attributes.slice('location', 'description').merge(extra)
+    event.attributes.slice('address', 'description').merge(extra)
   end
 
   def events_csv
     CSV.generate do |csv|
-      csv << [ 'Date', 'Location', 'Description', 'Lat', 'Lon' ]
+      csv << [ 'Date', 'Address', 'Description', 'Lat', 'Lon' ]
       @events.each do |e|
-        csv << [e.date.strftime('%Y-%m-%d'), e.location, e.description, e.lat, e.lon]
+        csv << [e.date.strftime('%Y-%m-%d'), e.address, e.description, e.lat, e.lon]
       end
     end
   end

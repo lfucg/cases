@@ -4,7 +4,7 @@ xml.kml xmlns: 'http://www.opengis.net/kml/2.2' do
     xml.name @bucket.name
     @events.reject!{ |e| e.lat.nil? || e.lon.nil? }.each do |event|
       xml.Placemark do
-        xml.name "#{event.datetime.strftime('%Y-%m-%d')} #{event.location}"
+        xml.name "#{event.datetime.strftime('%Y-%m-%d')} #{event.address}"
         xml.description event.description
         xml.Point do
           xml.coordinates "#{event.lon},#{event.lat},0"
