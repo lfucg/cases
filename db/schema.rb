@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131120061524) do
+ActiveRecord::Schema.define(:version => 20131120062656) do
 
   create_table "buckets", :force => true do |t|
     t.string   "name",                               :null => false
@@ -31,9 +31,11 @@ ActiveRecord::Schema.define(:version => 20131120061524) do
     t.integer  "import_series",                                                              :default => 0
     t.integer  "place_id"
     t.string   "geocode_status",                                                             :default => "new"
+    t.string   "hashed_address"
   end
 
   add_index "events", ["coords"], :name => "index_events_on_coords", :spatial => true
+  add_index "events", ["hashed_address"], :name => "index_events_on_hashed_address"
   add_index "events", ["row_checksum"], :name => "index_events_on_row_checksum"
 
   create_table "places", :force => true do |t|
@@ -42,6 +44,9 @@ ActiveRecord::Schema.define(:version => 20131120061524) do
     t.spatial  "coords",         :limit => {:srid=>4326, :type=>"point", :geographic=>true}
     t.datetime "created_at",                                                                                    :null => false
     t.datetime "updated_at",                                                                                    :null => false
+    t.string   "hashed_address"
   end
+
+  add_index "places", ["hashed_address"], :name => "index_places_on_hashed_address"
 
 end
