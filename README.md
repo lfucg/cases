@@ -1,9 +1,13 @@
-geoevents
-=========
+Cases
+=====
 
-Geoevents is an API for handling geospatial government service events like 311 calls, building inspection complaints and permits, code inspection and enforcement cases and more.
+Cases is an API for handling geospatial government service cases like 311 calls, building inspection complaints and permits, code inspection and enforcement cases and more.
 
-## Usage
+## Data
+
+Currently data is imported nightly via CSV dump from an internal MSSQL source at LFUCG.
+
+## Quick API Reference
 
 Event data is available in XML, JSON, KML and CSV formats.
 

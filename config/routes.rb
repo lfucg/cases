@@ -1,4 +1,4 @@
-Geoevents::Application.routes.draw do
+Cases::Application.routes.draw do
   mount Sidekiq::Web, at: '/sidekiq'
 
   root to: 'pages#root'

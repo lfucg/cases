@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Geoevents::Application.load_tasks
+Cases::Application.load_tasks

@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'yaml_config')
 require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'mail_config')
-Geoevents::Application.configure do
+Cases::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # Code is not reloaded between requests
