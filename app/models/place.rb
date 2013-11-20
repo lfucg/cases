@@ -11,7 +11,7 @@ class Place < ActiveRecord::Base
   validates :address, presence: true
 
   def set_coords(lat, lon)
-    self.coords = "POINT(#{lon}, #{lat})"
+    self.coords = "POINT(#{lon} #{lat})"
   end
 
   def geocodeable?
