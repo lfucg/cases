@@ -40,9 +40,9 @@ class ManifestWorker
       end
 
       unless row_batch.empty?
-        sql = 'INSERT INTO events (bucket_id, import_series, row_checksum, address, datetime, description) VALUES '
+        sql = 'INSERT INTO events (bucket_id, import_series, row_checksum, address, datetime, description, hashed_address) VALUES '
         row_batch.each_with_index do |r, idx|
-          values = [bucket_id, import_series, r[1], r[4], r[3], r[2]]
+          values = [bucket_id, import_series, r[1], r[4], r[3], r[2], r[5]]
           quoted = values.collect{ |v| quote(v) }
           sql << "(#{quoted.join(', ')})"
           if idx != row_batch.size - 1
@@ -86,10 +86,6 @@ class ManifestWorker
   end
 
   private
-
-  #def convert_datetime(str)
-  #  DateTime.strptime(str, '%Y-%m-%d %H:%M:%S %z')
-  #end
 
   def geocode(bucket_id)
     GeocodeWorker.perform_async(bucket_id)
