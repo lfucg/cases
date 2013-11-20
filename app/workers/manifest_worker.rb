@@ -7,7 +7,15 @@ require 'csv'
 class ManifestWorker
   include Sidekiq::Worker
 
+  # Optimal number of events for processing in a batch
   BATCH_SIZE = 90
+
+  # CSV columns
+  CSV_ROW_HASH = 0
+  CSV_DESCRIPTION = 1
+  CSV_DATETIME = 2
+  CSV_ADDRESS = 3
+  CSV_HASHED_ADDRESS = 4
 
   def perform(bucket_id, file)
     bucket = Bucket.find(bucket_id)
@@ -42,7 +50,16 @@ class ManifestWorker
       unless row_batch.empty?
         sql = 'INSERT INTO events (bucket_id, import_series, row_checksum, address, datetime, description, hashed_address) VALUES '
         row_batch.each_with_index do |r, idx|
-          values = [bucket_id, import_series, r[1], r[4], r[3], r[2], r[5]]
+
+          values = []
+          values << bucket_id
+          values << import_series
+          values << r[CSV_ROW_HASH]
+          values << r[CSV_ADDRESS]
+          values << r[CSV_DATETIME]
+          values << r[CSV_DESCRIPTION]
+          values << r[CSV_HASHED_ADDRESS]
+
           quoted = values.collect{ |v| quote(v) }
           sql << "(#{quoted.join(', ')})"
           if idx != row_batch.size - 1

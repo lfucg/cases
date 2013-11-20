@@ -32,11 +32,6 @@ class ImportWorker
   end
 
   def run_worker(bucket, file)
-    worker = (seedable?(bucket) ? SeedWorker : ManifestWorker)
-    worker.perform_async(bucket.id, file)
-  end
-
-  def seedable?(bucket)
-    Event.where(bucket_id: bucket.id).count == 0
+    ManifestWorker.perform_async(bucket.id, file)
   end
 end
