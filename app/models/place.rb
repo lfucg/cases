@@ -1,3 +1,14 @@
+# Place is a cache of geocoded addresses
+#
+# Place makes it so we don't have to query a remote geocoding API
+# to get address coordinates.
+#
+# If a place can't be geocoded the geocode_status is set so we don't
+# keep retrying bad addresses.
+#
+# The address is hashed and index so we can easily query for events
+# that share the same address hash and sync them.
+#
 # Geocode status could be:
 #   - new
 #   - complete
