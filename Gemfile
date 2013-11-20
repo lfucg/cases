@@ -12,6 +12,7 @@ gem 'unicorn'
 gem 'sinatra', require: false
 gem 'slim'
 gem 'exception_notification'
+gem 'rubyzip'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'

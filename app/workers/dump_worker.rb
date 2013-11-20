@@ -28,8 +28,16 @@ class DumpWorker
         csv << [e.date.strftime('%Y-%m-%d'), e.address, e.description, e.lat, e.lon]
       end
     end
+    zip(bucket, file)
+  end
+
+  def zip(bucket, file)
+    zip = "#{DUMP_DIR}/#{bucket.name}.zip"
+    Zip::File.open(zip, Zip::File::CREATE) do |zipfile|
+      zipfile.add(file)
+    end
     bucket.bulk_csv_created_at = Time.now
-    bucket.bulk_csv_filesize = File.size(file)
+    bucket.bulk_csv_filesize = File.size(zip)
     bucket.save
   end
 
