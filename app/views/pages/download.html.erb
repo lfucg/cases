@@ -16,7 +16,7 @@
         <% @buckets.each do |b| %>
           <% next if b.events.count == 0 || b.bulk_csv_created_at.nil? %>
           <tr>
-            <td><%= link_to "#{b.name}.csv", "/bulk/#{b.name}.csv" %></td>
+            <td><%= link_to "#{b.name}.zip", "/bulk/#{b.name}.zip" %></td>
             <td><%= b.bulk_csv_created_at %></td>
             <td><%= number_to_human_size(b.bulk_csv_filesize) %></td>
           </tr>
