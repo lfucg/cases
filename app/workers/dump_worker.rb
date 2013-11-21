@@ -1,3 +1,5 @@
+require 'zip'
+
 # Dump all data into files for bulk downloading
 #
 # This worker creates CSV and XML format file archives so consumers can
@@ -34,7 +36,7 @@ class DumpWorker
   def zip(bucket, file)
     zip = "#{DUMP_DIR}/#{bucket.name}.zip"
     Zip::File.open(zip, Zip::File::CREATE) do |zipfile|
-      zipfile.add(file)
+      zipfile.add("#{bucket.name}.csv", file)
     end
     bucket.bulk_csv_created_at = Time.now
     bucket.bulk_csv_filesize = File.size(zip)
