@@ -35,6 +35,10 @@ class DumpWorker
 
   def zip(bucket, file)
     zip = "#{DUMP_DIR}/#{bucket.name}.zip"
+
+    # Delete the zip file if it exists
+    File.delete(zip) if File.exists?(zip)
+
     Zip::File.open(zip, Zip::File::CREATE) do |zipfile|
       zipfile.add("#{bucket.name}.csv", file)
     end
